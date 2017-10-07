@@ -4,6 +4,7 @@ Simple method to query Census API for multiple ACS variables, multiple geographi
 ### Example
 
 Requires a Census API Key: https://www.census.gov/developers/
+Also requires DataMade's Census tool: https://github.com/datamade/census
 
 ```python
 import censusAcsExtract
@@ -21,10 +22,10 @@ e.stats = [
     ['B25034_011E', 'Built 1939 or earlier']
 ]
 ```
-
 Call an extract function either by Zip, Tract or Block Group. Note: When calling Zip Codes, you cannot filter by State. All states will be returned regardless.
 ```python
 e.extractByTract()
 e.extractByZip()
 e.extractByBlockGroup()
 ```
+Results are exported to \DataOutput\ directory as a CSV file.
