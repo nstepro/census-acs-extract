@@ -17,6 +17,3 @@ e.extractByTract()
 
 # e.extractByZip()
 # e.extractByBlockGroup
-
-
-

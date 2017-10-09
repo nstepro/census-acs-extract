@@ -22,18 +22,23 @@ class censusAcsExtract():
         c = Census(self.apiKey)
         
         statData = []
+        exportSet=1
         i=0
         while i<len(fipsData):
             ii=0
             while ii<len(fipsData[i]['counties']):
-                print('Calling Census API for ' + fipsData[i]['counties'][ii]['fipsDescription'])
+                print('Calling Census API for ' + fipsData[i]['counties'][ii]['fipsDescription'] + ' (' + str(len(statData)) + ' rows so far)')
                 
                 thisStat = c.acs5.state_county_tract(stats['apiInputs'], fipsData[i]['fips'], fipsData[i]['counties'][ii]['fips'], Census.ALL)
                 statData=statData+thisStat
+                if len(statData)>100000:
+                    outputData(statData, stats['statMap'], 'tract-' + str(len(self.stats)-1) + 'vars-' + 'export-' + str(exportSet))
+                    exportSet+=1
+                    statData = []
                 ii+=1
             i+=1
         
-        outputData(statData, stats['statMap'], 'blockGroup-' + str(len(self.stats)-1) + 'vars')
+        outputData(statData, stats['statMap'], 'tract-' + str(len(self.stats)-1) + 'vars-' + 'export-' + str(exportSet)) 
 
     def extractByBlockGroup(self):
         fipsData = getFipsSet(self.states)
@@ -41,20 +46,23 @@ class censusAcsExtract():
         c = Census(self.apiKey)
         
         statData = []
+        exportSet=1
         i=0
         while i<len(fipsData):
             ii=0
             while ii<len(fipsData[i]['counties']):
-                print('Calling Census API for ' + fipsData[i]['counties'][ii]['fipsDescription'])
+                print('Calling Census API for ' + fipsData[i]['counties'][ii]['fipsDescription'] + ' (' + str(len(statData)) + ' rows so far)')
                 
                 thisStat = c.acs5.state_county_blockgroup(stats['apiInputs'], fipsData[i]['fips'], fipsData[i]['counties'][ii]['fips'], Census.ALL)
                 statData=statData+thisStat
+                if len(statData)>100000:
+                    outputData(statData, stats['statMap'], 'blockGroup-' + str(len(self.stats)-1) + 'vars-' + 'export-' + str(exportSet))
+                    exportSet+=1
+                    statData = []
                 ii+=1
             i+=1
         
-        outputData(statData, stats['statMap'], 'blockGroup-' + str(len(self.stats)-1) + 'vars')
-                
-        
+        outputData(statData, stats['statMap'], 'blockGroup-' + str(len(self.stats)-1) + 'vars-' + 'export-' + str(exportSet))       
         
 
 
@@ -175,7 +183,8 @@ def getFipsSet(abbrev):
         i+=1
         
     output = []
-    if abbrev=='ALL' or abbrev==['ALL']:
+    
+    if abbrev.lower()=='all':
         for state in stateList:
             stateList[state]['counties'] = [a for a in countiesPrepped if a['abbrev'] in state]
             output.append(stateList[state])

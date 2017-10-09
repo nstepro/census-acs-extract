@@ -1,2 +1,5 @@
 /dataOutput/*
 /__pycache__/*
+censusAPIKey
+/dataInput/Census Variable Aggregations and Calculations.xlsx
+personalExtract.py
